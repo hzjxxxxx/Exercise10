@@ -73,17 +73,14 @@ public class UserService {
                 lastThreeTrips[t] = sb.toString();
             }
 
-            RegisteredUsers user = new RegisteredUsers(
-                    fullName,
-                    emailAddress,
-                    dateOfBirth,
-                    cardNumber,
-                    cardExpiryDate,
-                    cardProvider,
-                    cvv,
-                    userType,
-                    lastThreeTrips
-            );
+            RegisteredUsers user;
+            if (userType.equalsIgnoreCase("VIP")) {
+                user = new VIPUser(fullName, emailAddress, dateOfBirth, cardNumber,
+                        cardExpiryDate, cardProvider, cvv, userType, lastThreeTrips);
+            } else {
+                user = new RegularUser(fullName, emailAddress, dateOfBirth, cardNumber,
+                        cardExpiryDate, cardProvider, cvv, userType, lastThreeTrips);
+            }
 
             registeredUsersList.add(user);
             System.out.println("User added successfully.");

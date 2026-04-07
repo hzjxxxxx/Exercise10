@@ -4,11 +4,14 @@ import java.util.Deque;
 import java.util.Scanner;
 
 public class BikeRental {
+    private static final double BASE_FARE = 3.0;
+
     private boolean isRegisteredUser;
     private String emailAddress;
     private String location;
     private String bikeID;
     private boolean locationValid;
+    private RegisteredUsers currentUser;
 
     private UserRegistration userRegistration = new UserRegistration();
     private BikeService bikeService = new BikeService();
@@ -18,12 +21,18 @@ public class BikeRental {
 
     private Deque<ERyderLog> systemLogs = new ArrayDeque<>();
 
-    public void simulateApplicationInput() {
-        System.out.println("This is the simulation of the e-bike rental process.");
+    public void simulateApplicationInput(RegisteredUsers user) {
+        this.currentUser = user;
+        
+        if (user != null) {
+            isRegisteredUser = true;
+            emailAddress = user.getEmailAddress();
+            user.displayUserType();
+        } else {
+            isRegisteredUser = false;
+        }
 
-        System.out.print("Are you a registered user? (true/false): ");
-        isRegisteredUser = scanner.nextBoolean();
-        scanner.nextLine();
+        System.out.println("This is the simulation of the e-bike rental process.");
 
         System.out.print("Enter your email address: ");
         emailAddress = scanner.nextLine();
@@ -92,7 +101,14 @@ public class BikeRental {
     private void endTrip(String bikeID) {
         rentalService.endRental(bikeID);
         bikeService.releaseBike(bikeID, location);
+        
+        double fare = BASE_FARE;
+        if (currentUser != null) {
+            fare = currentUser.calculateFare(BASE_FARE);
+        }
+        
         System.out.println("Your trip has ended. Thank you for riding with us.");
+        System.out.println("Fare: €" + String.format("%.2f", fare));
         
         String logId = "ET" + (int)(Math.random() * 900 + 100);
         String event = "Trip ended for bike " + bikeID + " at " + location;

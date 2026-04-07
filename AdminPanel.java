@@ -32,7 +32,7 @@ public class AdminPanel {
                 userService.updateUser();
             } else if (choice == 5) {
                 BikeRental bikeRental = new BikeRental();
-                bikeRental.simulateApplicationInput();
+                bikeRental.simulateApplicationInput(null);
             } else if (choice == 6) {
                 BikeRental bikeRental = new BikeRental();
                 bikeRental.viewSystemLogs();
